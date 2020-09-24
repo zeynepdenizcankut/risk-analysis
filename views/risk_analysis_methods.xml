@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+<!--    <record id="methods_kanban" model="ir.ui.view">-->
+<!--        <field name="name">risk.analysis.kanban</field>-->
+<!--        <field name="model">risk.analysis</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <kanban>-->
+<!--                <field name="method_group"/>-->
+<!--                <templates>-->
+<!--                    <t t-name="kanban-box">-->
+<!--                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_risk_analysis_kanban">-->
+<!--                            <t t-if="record.image.raw_value">-->
+<!--                                <div class="o_kanban_image_fill_left d-none d-md-block"-->
+<!--                                     t-attf-style="background-image:url('#{kanban_image('risk.analysis', 'image', record.id.raw_value)}')"/>-->
+<!--                            </t>-->
+<!--                            <t t-else="">-->
+<!--                                <img class="o_kanban_image" alt="Avatar" t-att-src='_s + "/base/static/img/avatar.png"'/>-->
+<!--                            </t>-->
+<!--                            <div class="oe_kanban_details">-->
+<!--                                <strong class="o_kanban_record_title"><field name="display_name"/></strong>-->
+<!--                                <div class="o_kanban_tags_section"/>-->
+<!--                                <ul>-->
+<!--                                    <li>Age : <field name="fk_probability"/></li>-->
+<!--                                    <li>Doctor : <field name="fk_frequency"/></li>-->
+<!--                                    <li>Email : <field name="fk_effect"/></li>-->
+<!--                                </ul>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </t>-->
+<!--                </templates>-->
+<!--            </kanban>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+    <record id="analysis_tree" model="ir.ui.view">
+        <field name="name">risk.analysis.tree</field>
+        <field name="model">risk.analysis</field>
+        <field name="arch" type="xml">
+            <tree string="Risk Analysis">
+                <field name="company_id"/>
+                <field name="company_address"/>
+                <field name="team_id"/>
+                <field name="evaluation_date"/>
+                <field name="method_group"/>
+            </tree>
+        </field>
+    </record>
+
+
+        <record id="analysis_form" model="ir.ui.view">
+        <field name="name">risk.analysis.form</field>
+        <field name="model">risk.analysis</field>
+        <field name="arch" type="xml">
+            <form string="Risk Analysis">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="company_id" widget="selection"/>
+                            <field name="company_address"/>
+                        </group>
+                        <group>
+                            <field name="team_id" widget="many2many_tags"/>
+                            <field name="team_department" />
+                        </group>
+                        <group>
+                            <field name="evaluation_date" />
+                            <field name="method_group" widget="selection"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fine Kinney Method" attrs="{'invisible' : [('method_group','!=', 'fk_evaluation')]}" >
+                            <group>
+                                <group string="Fine Kinney Method">
+                                    <group>
+                                        <field name="fk_probability" />
+                                        <field name="fk_frequency" />
+                                        <field name="fk_effect" />
+                                    </group>
+                                    <group>
+                                        <field name="fk_evaluation" />
+                                        <field name="fk_value" />
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="L Matrix Method" attrs="{'invisible' : [('method_group','!=', 'lm_evaluation')]}">
+                            <group>
+                                <group string="L Matrix Method">
+                                    <group>
+                                        <field name="lm_probability" />
+                                        <field name="lm_effect" />
+                                    </group>
+                                    <group>
+                                        <field name="lm_evaluation" />
+                                        <field name="lm_value" />
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+
+
+    <record id="action_risk_analysis" model="ir.actions.act_window">
+            <field name="name">Risk Analysis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">risk.analysis</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create your first evaluation!
+              </p>
+            </field>
+    </record>
+
+
+    <menuitem id="risk_root" name="OHS Risk Analysis" sequence="0" />
+    <menuitem id="risk_analysis" name="Risk Analysis " parent="risk_root" action="action_risk_analysis"/>
+
+
+
+</odoo>
